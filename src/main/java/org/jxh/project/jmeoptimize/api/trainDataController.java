@@ -36,4 +36,25 @@ public class trainDataController {
         rs.put("data",trainDataDao.getData_shuJuWeiHu(jiqi));
         return  rs;
     }
+
+    @GetMapping("/addData")
+    JSONObject addData(@RequestParam("shuitou")Integer shuitou,@RequestParam("chuli")Integer chuli,@RequestParam("liuLiang")Integer liuLiang){
+    JSONObject rs=new JSONObject();
+    trainDataDao.addData(shuitou,chuli,liuLiang);
+    return  rs;
+    }
+    @GetMapping("/getUpdate")
+    JSONObject getUpdate(@RequestParam("id")Integer id,@RequestParam("shuitou")Integer shuitou,@RequestParam("chuli")Integer chuli,@RequestParam("liuLiang")Integer liuLiang){
+        JSONObject rs=new JSONObject();
+        rs.put("old",trainDataDao.updateSELECT(id));
+        trainDataDao.getUpdate(id,shuitou,chuli,liuLiang);
+        return  rs;
+    }
+    @GetMapping("/getDelete")
+    JSONObject getDelete(@RequestParam("id")Integer id){
+        JSONObject rs=new JSONObject();
+        trainDataDao.getDelete(id);
+        return  rs;
+    }
+
 }
