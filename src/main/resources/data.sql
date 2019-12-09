@@ -1,1 +1,0 @@
-insert into user (id,name,password,role) values (null,root,root,1)
