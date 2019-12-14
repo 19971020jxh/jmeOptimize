@@ -5,9 +5,11 @@ import org.jxh.project.jmeoptimize.dao.trainDataDao;
 import org.jxh.project.jmeoptimize.pojo.trainData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -38,16 +40,18 @@ public class trainDataController {
     }
 
     @GetMapping("/addData")
-    JSONObject addData(@RequestParam("shuitou")Integer shuitou,@RequestParam("chuli")Integer chuli,@RequestParam("liuLiang")Integer liuLiang){
+    JSONObject addData(@RequestParam(value = "shuitou",required = false)String shuitou,@RequestParam(value = "chuli",required = false)String chuli,@RequestParam(value = "liuLiang",required = false)String liuLiang,@RequestParam("jiqi")int jiqi){
     JSONObject rs=new JSONObject();
-    trainDataDao.addData(shuitou,chuli,liuLiang);
+        Random random=new Random();
+        random.setSeed(System.currentTimeMillis());
+    trainDataDao.addData(Double.parseDouble(shuitou.trim()),Double.parseDouble(chuli.trim()),Double.parseDouble(liuLiang),jiqi,random.nextFloat());
     return  rs;
     }
     @GetMapping("/getUpdate")
-    JSONObject getUpdate(@RequestParam("id")Integer id,@RequestParam("shuitou")Integer shuitou,@RequestParam("chuli")Integer chuli,@RequestParam("liuLiang")Integer liuLiang){
+    JSONObject getUpdate(@RequestParam("id")Integer id,@RequestParam(value = "shuitou",required = false)String shuitou,@RequestParam(value = "chuli",required = false)String chuli,@RequestParam(value = "liuLiang",required = false)String liuLiang){
         JSONObject rs=new JSONObject();
         rs.put("old",trainDataDao.updateSELECT(id));
-        trainDataDao.getUpdate(id,shuitou,chuli,liuLiang);
+        trainDataDao.getUpdate(id,Double.parseDouble(shuitou.trim()),Double.parseDouble(chuli.trim()),Double.parseDouble(liuLiang));
         return  rs;
     }
     @GetMapping("/getDelete")
@@ -57,4 +61,19 @@ public class trainDataController {
         return  rs;
     }
 
+    @GetMapping("/isOut")
+    JSONObject isOut(@RequestParam("shuitou")String shuitou,@RequestParam("liuLiang")String liuLiang){
+        JSONObject rs=new JSONObject();
+        JSONObject isOut= trainDataDao.isOut(Double.parseDouble(shuitou.trim()),Double.parseDouble(liuLiang.trim()));
+        rs.put("isOut",isOut);
+        return  rs;
+    }
+
+
+    @PostMapping("moXing/file")
+    JSONObject moXingFile(@RequestParam("file")MultipartFile file){
+        JSONObject rs=new JSONObject();
+        System.out.println(file.getName());
+        return  rs;
+    }
 }

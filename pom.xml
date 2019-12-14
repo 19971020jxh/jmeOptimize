@@ -19,6 +19,9 @@
     </properties>
 
     <dependencies>
+
+
+
         <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
         <dependency>
             <groupId>com.alibaba</groupId>

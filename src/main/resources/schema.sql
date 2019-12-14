@@ -9,10 +9,10 @@ DROP  table  if exists  trainData;
 create table trainData(
   id   INTEGER PRIMARY KEY AUTOINCREMENT ,
   jiQi int not null,
-  xiaolv int not null ,
-  shuitou real not null ,
-  chuli real not null,
-  liuLiang real not null ,
+  xiaolv int   ,
+  shuitou real   ,
+  chuli real  ,
+  liuLiang real   ,
   ORDER_TR real not null
 )
 

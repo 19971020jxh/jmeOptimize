@@ -29,31 +29,31 @@ public interface trainDataDao {
     List<JSONObject> getData_shuJuWeiHu(@Param("jiqi")int jiqi);
 
     @Insert("<script>" +
-            "INSERT INTO trainData ( " +
-            "<trim suffixOverrides=','>" +
-            "<if test='shuitou!=null and shuitou!='''>" +
+            "INSERT INTO trainData (   " +
+            "<trim suffixOverrides=','> jiqi ,ORDER_TR, " +
+            "<if test=\" shuitou!=null and shuitou!='' \" >" +
             "shuitou," +
             "</if>" +
-            "<if test='chuli!=null and chuli!='''>" +
+            "<if test=\" chuli!=null and chuli!='' \">" +
             "chuli," +
             "</if>" +
-            "<if test='liuLiang!=null and liuLiang!='''>" +
+            "<if test=\" liuLiang!=null and liuLiang!='' \">" +
             "liuLiang" +
-            "</if></trim>" +
+            "</if> </trim>" +
             ") VALUES " +
-            "<trim prefix='(' suffix=')' suffixOverrides=','>" +
-            "<if test='shuitou!=null and shuitou!='''>" +
+            "<trim prefix='(' suffix=')' suffixOverrides=','> #{jiqi},#{orderTR}," +
+            "<if test=\" shuitou!=null and shuitou!='' \">" +
             "#{shuitou}," +
             "</if>" +
-            "<if test='chuli!=null and chuli!='''>" +
+            "<if test=\" chuli!=null and chuli!='' \" >" +
             "#{chuli}," +
             "</if>" +
-            "<if test='liuLiang!=null and liuLiang!='''>" +
+            "<if test=\" liuLiang!=null and liuLiang!='' \">" +
             "#{liuLiang}" +
-            "</if></trim>" +
+            "</if> " +
             "</trim>"+
             "</script>")
-    void addData(@Param("shuitou")Integer shuitou,@Param("chuli")Integer chuli,@Param("liuLiang")Integer liuLiang);
+    void addData(@Param("shuitou")Double shuitou,@Param("chuli")Double chuli,@Param("liuLiang")Double liuLiang,@Param("jiqi")int jiqi,@Param("orderTR")float orderTR);
 
 
     @Select("SELECT xiaolv,  id FROM trainData WHERE id=#{id}")
@@ -65,21 +65,24 @@ public interface trainDataDao {
 
 
     @Update("<script>" +
-            "UPDATE   trainData  SET " +
+            "UPDATE trainData  SET " +
             "<trim suffixOverrides=','>" +
-            "<if test='shuitou!=null and shuitou!='''>" +
+            "<if test=\" shuitou!=null and shuitou!='' \">" +
             "shuitou=#{shuitou}," +
             "</if>" +
-            "<if test='chuli!=null and chuli!='''>" +
+            "<if test=\"chuli!=null and chuli!='' \">" +
             "chuli=#{chuli}," +
             "</if>" +
-            "<if test='liuLiang!=null and liuLiang!='''>" +
+            "<if test=\" liuLiang!=null and liuLiang!='' \">" +
             "liuLiang=#{liuLiang}" +
-            "</if></trim>" +
+            "</if> </trim>" +
             " WHERE id=#{id}"+
             "</script>")
-    void getUpdate(@Param("id")Integer id,@Param("shuitou")Integer shuitou,@Param("chuli")Integer chuli,@Param("liuLiang")Integer liuLiang);
+    void getUpdate(@Param("id")Integer id,@Param("shuitou")Double shuitou,@Param("chuli")Double chuli,@Param("liuLiang")Double liuLiang);
 
-    @Delete("DELETE FROM trianData WHERE id=#{id}")
+    @Delete("DELETE FROM trainData WHERE id=#{id}")
     void getDelete(@Param("id")Integer id);
+
+    @Select("SELECT (${shuitou}>max(shuitou)) AS `shuitouInfo`, (${liuLiang}>max(liuLiang)) AS `liuLiangInfo`  FROM trainData")
+    JSONObject isOut(@Param("shuitou")Double shuitou,@Param("liuLiang")Double liuLiang);
 }
