@@ -85,4 +85,8 @@ public interface trainDataDao {
 
     @Select("SELECT (${shuitou}>max(shuitou)) AS `shuitouInfo`, (${liuLiang}>max(liuLiang)) AS `liuLiangInfo`  FROM trainData")
     JSONObject isOut(@Param("shuitou")Double shuitou,@Param("liuLiang")Double liuLiang);
+
+
+    @Delete("DELETE FROM trainData")
+    void deleteAll();
 }

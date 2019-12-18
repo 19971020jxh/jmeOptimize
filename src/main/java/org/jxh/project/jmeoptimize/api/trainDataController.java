@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -76,4 +77,24 @@ public class trainDataController {
         System.out.println(file.getName());
         return  rs;
     }
+
+
+    @PostMapping("/newJiQi")
+    JSONObject newJiQi(@RequestBody List<JSONObject> trainDatas){
+        JSONObject rs=new JSONObject();
+        Random random=new Random();
+        trainDatas.stream().forEach(e->{
+            random.setSeed(System.currentTimeMillis());
+            trainDataDao.addData(e.getDouble("shuitou"),e.getDouble("chuli"),e.getDouble("liuLiang"),e.getIntValue("jiqi"),random.nextFloat());
+        });
+        return rs;
+    }
+
+    @PostMapping("/deleteAll")
+    JSONObject deleteAll(){
+        JSONObject rs=new JSONObject();
+        trainDataDao.deleteAll();
+        return  rs;
+    }
+
 }
