@@ -19,8 +19,76 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.11</version>
+        </dependency>
 
-
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>2.1.6</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.hebeu.jxh</groupId>-->
+<!--            <artifactId>easyexcel</artifactId>-->
+<!--            <version>2.1.6</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/lib/easyexcel-2.1.6.jar</systemPath>-->
+<!--        </dependency>-->
+        <!--  2月9号加入及老师jar包 -->
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>dataProcessing</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Data_Processing.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>dataFitting</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Data_Fitting.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>SaveModel1</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Save_Model_1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>chulijisuan</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/chulijisuan.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Characteristic_Curve</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Characteristic_Curve.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>SaveMode2</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Save_Model_2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>javabuilder</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/javabuilder.jar</systemPath>
+        </dependency>
+        <!--  2月9号加入及老师jar包 -->
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
         <dependency>
