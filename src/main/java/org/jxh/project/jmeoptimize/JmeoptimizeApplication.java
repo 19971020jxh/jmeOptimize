@@ -13,8 +13,6 @@ public class JmeoptimizeApplication {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(JmeoptimizeApplication.class);
         builder.headless(false).run();
 
-
-
       // SpringApplication.run(JmeoptimizeApplication.class, args);
     }
 

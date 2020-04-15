@@ -88,6 +88,35 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/javabuilder.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Data_Fitting_LiuLiang</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Data_Fitting_LiuLiang.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Data_Processing_LiuLiang</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Data_Processing_LiuLiang.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Save_Model_LiuLiang1</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Save_Model_LiuLiang1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Save_Model_LiuLiang2</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Save_Model_LiuLiang2.jar</systemPath>
+        </dependency>
         <!--  2月9号加入及老师jar包 -->
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->

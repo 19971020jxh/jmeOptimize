@@ -2,6 +2,7 @@ package org.jxh.project.jmeoptimize.api;
 
 import Characteristic_Curve.Class1;
 import Data_Processing.Data_Process;
+import chulijisuan.Chulijisuan;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.context.AnalysisContext;
@@ -11,6 +12,7 @@ import com.alibaba.excel.read.builder.ExcelReaderBuilder;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.jxh.project.jmeoptimize.dao.trainDataDao;
+import org.jxh.project.jmeoptimize.pojo.dataListener;
 import org.jxh.project.jmeoptimize.pojo.moXingUtil;
 import org.jxh.project.jmeoptimize.pojo.trainData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import java.io.FileOutputStream;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -53,11 +56,19 @@ public class trainDataController {
         Class1 class1=new Class1();
         class1.Characteristic_Curve();
     }
+    @GetMapping("chuLi")
+    void Chuli(@RequestParam("jiqi")int jiqi) throws  Exception{
+        Chulijisuan chulijisuan=new Chulijisuan();
+        // Could not create MWArray from unsupported MATLAB type MCOS
+        chulijisuan.chulijisuan(1);
+    }
 
     @GetMapping("/getData_shuJuWeiHu")
     JSONObject getData_shuJuWeiHu(@RequestParam("jiqi")int jiqi){
         JSONObject rs=new JSONObject();
-        rs.put("data",trainDataDao.getData_shuJuWeiHu(jiqi));
+        dataListener listener= new dataListener();
+        EasyExcel.read(System.getProperty("user.dir")+"Data_Process/机器"+jiqi+".xls",trainData.class,listener).sheet().doRead();
+        rs.put("data",listener.getDatas());
         return  rs;
     }
 
@@ -127,24 +138,34 @@ public class trainDataController {
     @PostMapping("/keep_1")
     JSONObject keep_1(@RequestBody String json){
         JSONObject rs=new JSONObject();
-        trainDataDao.delete(1);
-       List<trainData> list= JSONObject.parseArray(JSON.parseObject(json).getString("list"),trainData.class);
-       list.forEach(e->{
-            trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),1,null,e.getXiaolv());
-        });
-        moXingUtil.data_process(list,1);
+        //trainDataDao.delete(1);
+        List<trainData> list= JSONObject.parseArray(JSON.parseObject(json).getString("list"),trainData.class);
+      // list.forEach(e->{
+      //      trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),1,null,e.getXiaolv());
+     //   });
+        moXingUtil.data_process(list,1,"all");
         return  rs;
     }
     @PostMapping("/keep_2")
     JSONObject keep_2(@RequestBody String json){
         JSONObject rs=new JSONObject();
-        trainDataDao.delete(2);
+      //  trainDataDao.delete(2);
         List<trainData> list= JSONObject.parseArray(json,trainData.class);
-        list.forEach(e->{
-            trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),2,null,e.getXiaolv());
-        });
-        moXingUtil.data_process(list,2);
+      //  list.forEach(e->{
+      //      trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),2,null,e.getXiaolv());
+     //   });
+        moXingUtil.data_process(list,2,"all");
         return  rs;
+    }
+    @PostMapping("/keep_31")
+    JSONObject keep_31(@RequestBody String json){
+        // -> 3号机组大齿轮
+        return  null;
+    }
+    @PostMapping("/keep_32")
+    JSONObject keep_32(@RequestBody String json){
+        // -> 3号机组小齿轮
+        return  null;
     }
 
     @PostMapping("/deleteAll")
@@ -159,24 +180,30 @@ public class trainDataController {
     @ResponseBody
     public JSONObject addBatch(@RequestParam("file")MultipartFile file,@RequestParam("jiqi")int jiqi) throws  Exception{
         JSONObject rs=new JSONObject();
-        ExcelListener listener= new ExcelListener();
-        ExcelReader reader= new ExcelReader(new BufferedInputStream(file.getInputStream()),null,listener,false);
-        reader.read(new Sheet(1,1,trainData.class));
-        trainDataDao.delete(jiqi);
+        dataListener listener=new dataListener();
+        EasyExcel.read(new BufferedInputStream(file.getInputStream()),trainData.class,listener).sheet().doRead();
+      //  ExcelListener listener= new ExcelListener();
+      //  ExcelReader reader= new ExcelReader(new BufferedInputStream(file.getInputStream()),null,listener,false);
+     //   reader.read(new Sheet(1,1,trainData.class));
+     //   trainDataDao.delete(jiqi);
+        // -> 获取批量上传的新数据
         List<trainData> list= listener.getDatas();
-        list.forEach(e->{
-            trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),jiqi,null,e.getXiaolv());
-        });
+      //  list.forEach(e->{
+        //    trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),jiqi,null,e.getXiaolv());
+      //  });
+        // -> 已经存在的旧数据
+        listener=new dataListener();
+        EasyExcel.read(System.getProperty("user.dir")+"Data_Process/机器"+jiqi+".xls",trainData.class,listener).sheet().doRead();
+        List<trainData> list2= listener.getDatas();
+        // -> 合并去重 生成新的excels
+        moXingUtil.data_process(Stream.of(list,list2).flatMap(Collection::stream).distinct().collect(Collectors.toList()),jiqi,"all");
        // rs.put("list",list);
-
-
-
         return  rs;
     }
 
     @PostMapping("data_process")
-    public JSONObject data_process(@RequestParam("jiqi")int jiqi){
-        moXingUtil.data_process( trainDataDao.getDataAll(jiqi),jiqi);
+    public JSONObject data_process(@RequestParam("jiqi")int jiqi,@RequestParam("pageName")String pageName){
+        moXingUtil.data_process( trainDataDao.getDataAll(jiqi),jiqi,pageName);
         return  null;
     }
 
@@ -186,8 +213,8 @@ public class trainDataController {
         return  null;
     }
     @PostMapping("SaveModel")
-    public JSONObject SaveModel(@RequestParam("jiqi")int jiqi) throws  Exception{
-            moXingUtil.SaveModel(jiqi);
+    public JSONObject SaveModel(@RequestParam("jiqi")int jiqi,@RequestParam("pageName")String pageName) throws  Exception{
+            moXingUtil.SaveModel(jiqi,pageName);
         return  null;
     }
 
@@ -201,20 +228,20 @@ public class trainDataController {
      EasyExcel.write(response.getOutputStream(),trainData.class).sheet("sheet1").doWrite(list);
     }
 
-  class   ExcelListener extends  AnalysisEventListener<trainData>{
-      private List<trainData> datas = new ArrayList<>();
-      @Override
-      public void invoke(trainData o, AnalysisContext analysisContext) {
-          datas.add(o);
-      }
-      @Override
-      public void doAfterAllAnalysed(AnalysisContext analysisContext) {}
-      public List<trainData> getDatas() {
-          return datas;
-      }
-
-      public void setDatas(List<trainData> datas) {
-          this.datas = datas;
-      }
-  }
+//  class   ExcelListener extends  AnalysisEventListener<trainData>{
+//      private List<trainData> datas = new ArrayList<>();
+//      @Override
+//      public void invoke(trainData o, AnalysisContext analysisContext) {
+//          datas.add(o);
+//      }
+//      @Override
+//      public void doAfterAllAnalysed(AnalysisContext analysisContext) {}
+//      public List<trainData> getDatas() {
+//          return datas;
+//      }
+//
+//      public void setDatas(List<trainData> datas) {
+//          this.datas = datas;
+//      }
+//  }
 }
