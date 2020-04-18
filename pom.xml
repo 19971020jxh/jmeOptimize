@@ -101,7 +101,14 @@
             <artifactId>Data_Processing_LiuLiang</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Data_Processing_LiuLiang.jar</systemPath>
+            <systemPath>${project.basedir}/lib/Data_Processing_Liuliang.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Liuliang_Net_Saveas</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Liuliang_Net_Saveas.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.hebeu.jxh</groupId>
@@ -117,7 +124,28 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Save_Model_LiuLiang2.jar</systemPath>
         </dependency>
-        <!--  2月9号加入及老师jar包 -->
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Chuli_Net_Saveas</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Chuli_Net_Saveas.jar</systemPath>
+       </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Data_Fitting_Chuli</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Data_Fitting_Chuli.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Data_Processing_Chuli</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Data_Processing_Chuli.jar</systemPath>
+        </dependency>
+        <!--   加入及老师jar包 -->
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
         <dependency>

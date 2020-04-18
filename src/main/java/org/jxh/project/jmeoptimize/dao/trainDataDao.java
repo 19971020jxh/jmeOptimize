@@ -38,13 +38,21 @@ public interface trainDataDao {
     String[] ff2(@Param("id") Integer id);
 
     @Select("SELECT  * FROM trainData_${jiqi}")
-    List<JSONObject> getData_shuJuWeiHu(@Param("jiqi")int jiqi);
+    List<JSONObject> getData_shuJuWeiHu(@Param("jiqi")String jiqi);
 
     @Select("SELECT  * FROM trainData_${jiqi}")
     List<trainData> getDataAll(@Param("jiqi")int jiqi);
 
     @Delete("DELETE FROM trainData_${jiqi}")
-    void delete(@Param("jiqi")int jiqi);
+    void delete(@Param("jiqi")String jiqi);
+    @Insert("<script>" +
+            "INSERT INTO trainData_${jiqi} " +
+            "(xiaolv,shuitou,chuli,liuLiang ) VALUES " +
+            "<foreach collection='list' open='(' close=')' separator=',' item='trainData' >" +
+            "#{trainData.xiaolv},#{trainData.shuitou},#{trainData.chuli},#{trainData.liuLiang} " +
+            "</foreach>" +
+            "</script>")
+    void addBatch(@Param("list") List<trainData> list,@Param("jiqi")String jiqi);
 
     @Insert("<script>" +
             "INSERT INTO trainData_${jiqi} (   " +
@@ -79,7 +87,7 @@ public interface trainDataDao {
             "</if> " +
             "</trim>"+
             "</script>")
-    void addData(@Param("shuitou")Double shuitou,@Param("chuli")Double chuli,@Param("liuLiang")Double liuLiang,@Param("jiqi")int jiqi,@Param("orderTR")Float orderTR,@Param("xiaolv")Integer xiaolv);
+    void addData(@Param("shuitou")Double shuitou,@Param("chuli")Double chuli,@Param("liuLiang")Double liuLiang,@Param("jiqi")String jiqi,@Param("orderTR")Float orderTR,@Param("xiaolv")Integer xiaolv);
 
     @Select("SELECT * FROM trainData_${jiqi} ")
     List<trainData> excels(@Param("jiqi")Integer jiqi);
@@ -107,15 +115,18 @@ public interface trainDataDao {
             "<if test=\"chuli!=null and chuli!='' \">" +
             "chuli=#{chuli}," +
             "</if>" +
+            "<if test=\"xiaolv!=null and xiaolv!='' \">" +
+            "xiaolv=#{xiaolv}," +
+            "</if>" +
             "<if test=\" liuLiang!=null and liuLiang!='' \">" +
             "liuLiang=#{liuLiang}" +
             "</if> </trim>" +
             " WHERE id=#{id}"+
             "</script>")
-    void getUpdate(@Param("id")Integer id,@Param("jiqi")int jiqi, @Param("shuitou")Double shuitou,@Param("chuli")Double chuli,@Param("liuLiang")Double liuLiang);
+    void getUpdate(@Param("id")Integer id,@Param("jiqiS")String jiqi,@Param("xiaolv")int xiaolv, @Param("shuitou")Double shuitou,@Param("chuli")Double chuli,@Param("liuLiang")Double liuLiang);
 
     @Delete("DELETE FROM trainData_${jiqi} WHERE id=#{id}")
-    void getDelete(@Param("id")Integer id,@Param("jiqi")int jiqi);
+    void getDelete(@Param("id")Integer id,@Param("jiqiS")String jiqi);
 
     @Select("SELECT (${shuitou}>max(shuitou)) AS `shuitouInfo`, (${liuLiang}>max(liuLiang)) AS `liuLiangInfo`  FROM trainData")
     JSONObject isOut(@Param("shuitou")Double shuitou,@Param("liuLiang")Double liuLiang);

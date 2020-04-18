@@ -66,41 +66,50 @@ public class trainDataController {
     @GetMapping("/getData_shuJuWeiHu")
     JSONObject getData_shuJuWeiHu(@RequestParam("jiqi")int jiqi){
         JSONObject rs=new JSONObject();
-        dataListener listener= new dataListener();
-        EasyExcel.read(System.getProperty("user.dir")+"Data_Process/机器"+jiqi+".xls",trainData.class,listener).sheet().doRead();
-        rs.put("data",listener.getDatas());
+       // dataListener listener= new dataListener();
+      //  EasyExcel.read(System.getProperty("user.dir")+"Data_Process/机器"+jiqi+".xls",trainData.class,listener).sheet().doRead();
+        rs.put("data",trainDataDao.getData_shuJuWeiHu(beforeJiQi(jiqi)));
         return  rs;
     }
 
-//    @GetMapping("/addData")
-//    JSONObject addData(@RequestParam(value = "shuitou",required = false)String shuitou,@RequestParam(value = "chuli",required = false)String chuli,@RequestParam(value = "liuLiang",required = false)String liuLiang,@RequestParam("jiqi")int jiqi){
-//    JSONObject rs=new JSONObject();
-////        Random random=new Random();
-//////        random.setSeed(System.currentTimeMillis());
-//    trainDataDao.addData(Double.parseDouble(shuitou.trim()),Double.parseDouble(chuli.trim()),Double.parseDouble(liuLiang),jiqi,null,null);
-//    return  rs;
-//    }
-//    @GetMapping("/getUpdate")
-//    JSONObject getUpdate(@RequestParam("id")Integer id,@RequestParam("jiqi")Integer jiqi, @RequestParam(value = "shuitou",required = false)String shuitou,@RequestParam(value = "chuli",required = false)String chuli,@RequestParam(value = "liuLiang",required = false)String liuLiang){
-//        JSONObject rs=new JSONObject();
-//        trainData traindata=null;
-//        if(jiqi==1){
-//            traindata=  trainDataDao.updateSELECT_1(id) ;
-//        }
-//        if(jiqi==2){
-//            traindata=  trainDataDao.updateSELECT_2(id) ;
-//        }
-//        rs.put("old",traindata);
-//        trainDataDao.getUpdate(id,jiqi,Double.parseDouble(shuitou.trim()),Double.parseDouble(chuli.trim()),Double.parseDouble(liuLiang));
-//        return  rs;
-//    }
+    @GetMapping("/addData")
+    JSONObject addData(@RequestParam("xiaolv")int xiaolv, @RequestParam(value = "shuitou",required = false)String shuitou,@RequestParam(value = "chuli",required = false)String chuli,@RequestParam(value = "liuLiang",required = false)String liuLiang,@RequestParam("jiqi")int jiqi){
+    JSONObject rs=new JSONObject();
+    trainDataDao.addData(Double.parseDouble(shuitou.trim()),Double.parseDouble(chuli.trim()),Double.parseDouble(liuLiang),beforeJiQi(jiqi),null,xiaolv);
+    return  rs;
+    }
+    @GetMapping("/getUpdate")
+    JSONObject getUpdate(@RequestParam("id")Integer id,@RequestParam("jiqi")Integer jiqi,@RequestParam("xiaolv")int xiaolv, @RequestParam(value = "shuitou",required = false)String shuitou,@RequestParam(value = "chuli",required = false)String chuli,@RequestParam(value = "liuLiang",required = false)String liuLiang){
+        JSONObject rs=new JSONObject();
+        trainData traindata=null;
+        if(jiqi==1){
+            traindata=  trainDataDao.updateSELECT_1(id) ;
+        }
+        if(jiqi==2){
+            traindata=  trainDataDao.updateSELECT_2(id) ;
+        }
+        rs.put("old",traindata);
+        trainDataDao.getUpdate(id,beforeJiQi(jiqi),xiaolv,Double.parseDouble(shuitou.trim()),Double.parseDouble(chuli.trim()),Double.parseDouble(liuLiang));
+        return  rs;
+    }
 
-//    @GetMapping("/getDelete")
-//    JSONObject getDelete(@RequestParam("id")Integer id,@RequestParam("jiqi")int jiqi){
-//        JSONObject rs=new JSONObject();
-//        trainDataDao.getDelete(id,jiqi);
-//        return  rs;
-//    }
+    @GetMapping("/getDelete")
+    JSONObject getDelete(@RequestParam("id")Integer id,@RequestParam("jiqi")int jiqi){
+        JSONObject rs=new JSONObject();
+
+        trainDataDao.getDelete(id,beforeJiQi(jiqi));
+        return  rs;
+    }
+    @GetMapping("daoChu") JSONObject daoChu(@RequestParam("jiqi")int jiqi){
+        JSONObject rs=new JSONObject();
+        // 导出到这个文件中
+        String path=System.getProperty("user.dir")+"/JZ_From_Databases/NO"+beforeJiQi(jiqi).toUpperCase()+"_Characteristic_curve_data.xls";//+
+        // 删除原来的excel
+        new File(path).delete();
+        // 生成excel
+        EasyExcel.write(path,trainData.class).sheet("sheet1").doWrite(trainDataDao.getData_shuJuWeiHu(beforeJiQi(jiqi)));
+        return  rs;
+    }
 
     @GetMapping("/isOut")
     JSONObject isOut(@RequestParam("shuitou")String shuitou,@RequestParam("liuLiang")String liuLiang){
@@ -130,43 +139,43 @@ public class trainDataController {
 //        return rs;
 //    }
 
-    /**
-     * 保存修改!!!!
-     * @param json
-     * @return
-     */
-    @PostMapping("/keep_1")
-    JSONObject keep_1(@RequestBody String json){
-        JSONObject rs=new JSONObject();
-        //trainDataDao.delete(1);
-        List<trainData> list= JSONObject.parseArray(JSON.parseObject(json).getString("list"),trainData.class);
-      // list.forEach(e->{
-      //      trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),1,null,e.getXiaolv());
-     //   });
-        moXingUtil.data_process(list,1,"all");
-        return  rs;
-    }
-    @PostMapping("/keep_2")
-    JSONObject keep_2(@RequestBody String json){
-        JSONObject rs=new JSONObject();
-      //  trainDataDao.delete(2);
-        List<trainData> list= JSONObject.parseArray(json,trainData.class);
-      //  list.forEach(e->{
-      //      trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),2,null,e.getXiaolv());
-     //   });
-        moXingUtil.data_process(list,2,"all");
-        return  rs;
-    }
-    @PostMapping("/keep_31")
-    JSONObject keep_31(@RequestBody String json){
-        // -> 3号机组大齿轮
-        return  null;
-    }
-    @PostMapping("/keep_32")
-    JSONObject keep_32(@RequestBody String json){
-        // -> 3号机组小齿轮
-        return  null;
-    }
+//    /**
+//     * 保存修改!!!!
+//     * @param json
+//     * @return
+//     */
+//    @PostMapping("/keep_1")
+//    JSONObject keep_1(@RequestBody String json){
+//        JSONObject rs=new JSONObject();
+//        //trainDataDao.delete(1);
+//        List<trainData> list= JSONObject.parseArray(JSON.parseObject(json).getString("list"),trainData.class);
+//      // list.forEach(e->{
+//      //      trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),1,null,e.getXiaolv());
+//     //   });
+//        moXingUtil.data_process(list,beforeJiQi(jiqi),"all");
+//        return  rs;
+//    }
+//    @PostMapping("/keep_2")
+//    JSONObject keep_2(@RequestBody String json){
+//        JSONObject rs=new JSONObject();
+//      //  trainDataDao.delete(2);
+//        List<trainData> list= JSONObject.parseArray(json,trainData.class);
+//      //  list.forEach(e->{
+//      //      trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),2,null,e.getXiaolv());
+//     //   });
+//        moXingUtil.data_process(list,2,"all");
+//        return  rs;
+//    }
+//    @PostMapping("/keep_31")
+//    JSONObject keep_31(@RequestBody String json){
+//        // -> 3号机组大齿轮
+//        return  null;
+//    }
+//    @PostMapping("/keep_32")
+//    JSONObject keep_32(@RequestBody String json){
+//        // -> 3号机组小齿轮
+//        return  null;
+//    }
 
     @PostMapping("/deleteAll")
     JSONObject deleteAll(){
@@ -175,10 +184,10 @@ public class trainDataController {
         return  rs;
     }
 
-
-    @PostMapping("addBatch")
+    // -> excel 在JZ_Digitized_data 生成excel
+    @PostMapping("uploadExcel")
     @ResponseBody
-    public JSONObject addBatch(@RequestParam("file")MultipartFile file,@RequestParam("jiqi")int jiqi) throws  Exception{
+    public JSONObject uploadExcel(@RequestParam("file")MultipartFile file,@RequestParam("jiqi")int jiqi) throws  Exception{
         JSONObject rs=new JSONObject();
         dataListener listener=new dataListener();
         EasyExcel.read(new BufferedInputStream(file.getInputStream()),trainData.class,listener).sheet().doRead();
@@ -188,22 +197,21 @@ public class trainDataController {
      //   trainDataDao.delete(jiqi);
         // -> 获取批量上传的新数据
         List<trainData> list= listener.getDatas();
-      //  list.forEach(e->{
-        //    trainDataDao.addData(e.getShuitou(),e.getChuli(),e.getLiuliang(),jiqi,null,e.getXiaolv());
-      //  });
-        // -> 已经存在的旧数据
-        listener=new dataListener();
-        EasyExcel.read(System.getProperty("user.dir")+"Data_Process/机器"+jiqi+".xls",trainData.class,listener).sheet().doRead();
-        List<trainData> list2= listener.getDatas();
-        // -> 合并去重 生成新的excels
-        moXingUtil.data_process(Stream.of(list,list2).flatMap(Collection::stream).distinct().collect(Collectors.toList()),jiqi,"all");
+        // -> 清空相应表
+        trainDataDao.delete(beforeJiQi(jiqi));
+        // ->写进数据库
+        trainDataDao.addBatch(list,beforeJiQi(jiqi));
+        // -> 生成文件. 清空原来数据
+        new File(System.getProperty("user.dir") + "/JZ_Digitized_data/NO" + beforeJiQi(jiqi).toUpperCase() + "_Characteristic_curve_data.xls").delete();
+        EasyExcel.write(System.getProperty("user.dir") + "/JZ_Digitized_data/NO" + beforeJiQi(jiqi).toUpperCase() + "_Characteristic_curve_data.xls", trainData.class).sheet("sheet1").doWrite(list);
+       // moXingUtil.data_process(Stream.of(list,list).flatMap(Collection::stream).distinct().collect(Collectors.toList()),jiqi,"all");
        // rs.put("list",list);
         return  rs;
     }
 
     @PostMapping("data_process")
-    public JSONObject data_process(@RequestParam("jiqi")int jiqi,@RequestParam("pageName")String pageName){
-        moXingUtil.data_process( trainDataDao.getDataAll(jiqi),jiqi,pageName);
+    public JSONObject data_process(@RequestParam("jiqi")int jiqi,@RequestParam("pageName")String pageName,@RequestParam("file")MultipartFile file) throws  Exception{
+        moXingUtil.data_process( beforeJiQi(jiqi).toUpperCase(),pageName,file.getInputStream());
         return  null;
     }
 
@@ -214,7 +222,7 @@ public class trainDataController {
     }
     @PostMapping("SaveModel")
     public JSONObject SaveModel(@RequestParam("jiqi")int jiqi,@RequestParam("pageName")String pageName) throws  Exception{
-            moXingUtil.SaveModel(jiqi,pageName);
+            moXingUtil.SaveModel(beforeJiQi(jiqi),pageName);
         return  null;
     }
 
@@ -244,4 +252,19 @@ public class trainDataController {
 //          this.datas = datas;
 //      }
 //  }
+
+    @RequestMapping("/moXingXunLianInit")
+    JSONObject moXingXunLianInit(@RequestParam("pageName")String pageName){
+        JSONObject rs=new JSONObject();
+        rs.put("filePath",System.getProperty("user.dir")+"/JZ_From_Databases");
+        return  rs;
+    }
+
+
+    String beforeJiQi(int jiqi){
+        if(jiqi==1 || jiqi==2) return jiqi+"";
+        if(jiqi==31) return  "3b";
+        if(jiqi==32) return "3s";
+        return null;
+    }
 }
