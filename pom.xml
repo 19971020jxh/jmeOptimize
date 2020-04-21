@@ -112,6 +112,13 @@
         </dependency>
         <dependency>
             <groupId>org.hebeu.jxh</groupId>
+            <artifactId>Characteristic_Curve_Show</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Characteristic_Curve_Show.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.hebeu.jxh</groupId>
             <artifactId>Save_Model_LiuLiang1</artifactId>
             <version>1.0</version>
             <scope>system</scope>

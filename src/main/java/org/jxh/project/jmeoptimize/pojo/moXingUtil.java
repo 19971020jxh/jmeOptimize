@@ -1,5 +1,6 @@
 package org.jxh.project.jmeoptimize.pojo;
 
+import Characteristic_Curve_Show.Characteristic_Curve;
 import Chuli_Net_Saveas.Chuli_Net_Save;
 import Data_Fitting.Class1;
 import Data_Fitting.Data_FittingMCRFactory;
@@ -164,19 +165,20 @@ public   class  moXingUtil {
     public static void SaveModel(String jiqi,String pageName) throws  Exception{
       if(pageName.equals("chuLi"))  {
             new Chuli_Net_Save().Chuli_Net_Saveas(path+"/Data_Fitted_Chuli/NO"+jiqi.toUpperCase()+"_net");
-//          if(jiqi==1) new Save_Model_1.Class1().Save_Model_1();
-//          if(jiqi==2) new Save_Model_2.Class1().Save_Model_2();
       }
         if(pageName.equals("liuLiang"))  {
             new Liuliang_Net_Save().Liuliang_Net_Saveas(path+"/Data_Fitted_Liuliang/NO"+jiqi.toUpperCase()+"_net");
-//            if(jiqi==1) new Save_LiuLiang_Model_1().Save_Model_LiuLiang1();
-//            if(jiqi==2) new Save_LiuLiang_Model_2().Save_Model_LiuLiang2();
         }
 
     }
 
-
-
+    /**
+     * 效率曲线
+     * @param jiqi
+     */
+  public static void Curve(String jiqi) throws  Exception{
+    new Characteristic_Curve().Characteristic_Curve_Show(path+"/JZ_From_Databases/NO"+jiqi+"_Characteristic_curve_data.xls");
+  }
 
 
 

@@ -51,23 +51,20 @@ public class trainDataController {
         return  rs;
     }
     @GetMapping("curve")
-    void Curve() throws  Exception{
-        // -> 特征曲线窗口 4/8
-        Class1 class1=new Class1();
-        class1.Characteristic_Curve();
+    void Curve(@RequestParam("jiqi")int jiqi) throws  Exception{
+        moXingUtil.Curve(beforeJiQi(jiqi));
     }
     @GetMapping("chuLi")
     void Chuli(@RequestParam("jiqi")int jiqi) throws  Exception{
         Chulijisuan chulijisuan=new Chulijisuan();
         // Could not create MWArray from unsupported MATLAB type MCOS
+        // --- > 这个i 是表示什么? 功率计算
         chulijisuan.chulijisuan(1);
     }
 
     @GetMapping("/getData_shuJuWeiHu")
     JSONObject getData_shuJuWeiHu(@RequestParam("jiqi")int jiqi){
         JSONObject rs=new JSONObject();
-       // dataListener listener= new dataListener();
-      //  EasyExcel.read(System.getProperty("user.dir")+"Data_Process/机器"+jiqi+".xls",trainData.class,listener).sheet().doRead();
         rs.put("data",trainDataDao.getData_shuJuWeiHu(beforeJiQi(jiqi)));
         return  rs;
     }
@@ -211,7 +208,11 @@ public class trainDataController {
 
     @PostMapping("data_process")
     public JSONObject data_process(@RequestParam("jiqi")int jiqi,@RequestParam("pageName")String pageName,@RequestParam("file")MultipartFile file) throws  Exception{
+      //  JSONObject rs=new JSONObject();
         moXingUtil.data_process( beforeJiQi(jiqi).toUpperCase(),pageName,file.getInputStream());
+      //  dataListener listener=new dataListener();
+      //  EasyExcel.read(new BufferedInputStream(file.getInputStream()),JSONObject.class,listener).sheet().doRead();
+      //  rs.put("list",listener.getDatas());
         return  null;
     }
 
